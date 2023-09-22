@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thực hành 1</title>
+    <style>
+        table, tr, td{
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+        #search{
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <tbody>
+            <tr>
+                <td>Nhập tiêu đề</td>
+                <td>
+                    <input type="text"> <br>
+                    <a id="search" onclick="searchAdvanced()">Tìm kiếm nâng cao</a>
+                </td>
+            </tr>
+            <tr style="display: none;">
+                <td>Chọn chuyên mục</td>
+                <td>
+                    <select>
+                        <option value="">PHP</option>
+                        <option value="">JavaScript</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <button>Tìm kiếm</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        function searchAdvanced(){
+            if(document.getElementById('search').innerText == 'Tìm kiếm nâng cao'){
+                document.querySelector('table>tbody>tr:nth-child(2)').style.display = 'table-row'
+                document.getElementById('search').innerText = 'Bỏ tìm kiếm nâng cao'
+            }
+            else{
+                document.querySelector('table>tbody>tr:nth-child(2)').style.display = 'none'
+                document.getElementById('search').innerText = 'Tìm kiếm nâng cao'
+            }
+        }
+    </script>
+</body>
+</html>
