@@ -43,10 +43,10 @@ TaskManager.addTask(new Task(2, "Build Feature add to cart"))
 TaskManager.addTask(new Task(3, "QA Task 001"))
 
 function renderTaskList() {
-    let htmls = TaskManager.getTaskList().map(function (task) {
+    let htmls = TaskManager.getTaskList().map(function (task, index) {
         return `
             <tr>
-                <td>${task.id}</td>
+                <td>#task_${task.id}</td>
                 <td>${task.taskName}</td>
                 <td>${task.status}</td>
                 <td>
