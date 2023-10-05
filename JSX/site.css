@@ -1,0 +1,9 @@
+.form-group{
+    width: 300px;
+    margin: 5px 0px;
+}
+
+.form-group>label{
+    display: inline-block;
+    width: 100px;
+}
