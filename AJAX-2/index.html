@@ -12,9 +12,17 @@
 
 <body>
     <div class="container">
-        <button class="btn btn-warning btn-sm" onclick="showUserList()">Show User List</button>
-        <button class="btn btn-success btn-sm" onclick="openCreateUserModal()">Create User</button>
-        <button class="btn btn-danger btn-sm" onclick="removeUserIdList()">Delete Users</button>
+        <div class="">
+            <button class="btn btn-warning btn-sm" onclick="showUserList()">Show User List</button>
+            <button class="btn btn-success btn-sm" onclick="openCreateUserModal()">Create User</button>
+            <button class="btn btn-danger btn-sm" onclick="removeUserIdList()">Delete Users</button>
+        </div>
+        <div class="d-flex my-3">
+            <input type="search" class="form-control" id="keyword"
+                oninput="search()"
+            >
+            <button class="btn btn-secondary btn-sm" onclick="search()">Search</button>
+        </div>
         <div id="userList" class="row">
 
         </div>
