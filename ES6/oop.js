@@ -2,6 +2,10 @@
 // camelCase = tongHaiSo
 // PascalCase = TongHaiSo
 // snake_case = tong_hai_so
+
+// access modifier
+// public
+// private
 class Person{
     constructor(name, gender, dob){
         this.name = name;

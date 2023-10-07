@@ -15,8 +15,8 @@
 // input: text
 // output: format log
 
-function writeLog(code, text){
-    if(code == 500){
+function writeLog(code, text) {
+    if (code == 500) {
         return `[Error]- ${text}`
     }
     return `[Info]- ${text}`
