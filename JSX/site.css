@@ -6,4 +6,10 @@
 .form-group>label{
     display: inline-block;
     width: 100px;
+    color: blue
+}
+
+.heading_1 {
+    color: yellow;
+    background-color: red;
 }
