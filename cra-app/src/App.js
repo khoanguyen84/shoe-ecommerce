@@ -46,10 +46,10 @@ function App() {
   return (
     <div className="container vh-100">
       <h1 className='display-3 fw-bolder'>We are learning CRA</h1>
-      <section>
+      <section className='mt-4'>
         <form className='row'>
           <div className='col-md-4'>
-            <h3 className='display-6 fw-bolder mb-4'>Let us know about yourquery.</h3>
+            <h3 className='display-6 fw-bolder mb-4'>Let us know about your query.</h3>
             <p>
               Fill out the form provided and we'll be in-touch within 48
               hours. Also check out our <a href='#'>Contact Us</a> page for more
@@ -89,8 +89,8 @@ function App() {
               </div>
             </div>
             <div className='row mb-3'>
-              <div className='col-md-12 form-check'>
-                <input type="checkbox" className='form-check-input' />
+              <div className='col-md-12 d-flex'>
+                <input type="checkbox" className='form-check-input me-2 fs-2' />
                 <label className='form-check-label'>I agree to Envira Recycling processing and storing the data used
                   on this form for the purpose of responding to my enquiry.</label>
               </div>
