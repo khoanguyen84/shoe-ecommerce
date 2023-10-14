@@ -9,8 +9,14 @@ const profile = {
     email: "khoa.nguyen@codegym.vn",
     avatar: "https://cdn0.iconfinder.com/data/icons/avatar-78/128/3-512.png"
 }
-
+// boolean, null, undefined => ko render
 const Profile = () => {
+    // let admin = undefined;
+    let roles = []
+    let permission = {
+    }
+    console.log(Boolean(permission));
+    console.log(Boolean(roles));
     return (
         <section>
             <div className="card mb-3" >
@@ -22,6 +28,7 @@ const Profile = () => {
                     <div className="col-md-8">
                         <div className="card-body">
                             <h5 className="card-title">{profile.name}</h5>
+                            { Object.keys(permission).length > 0 && <span className="text-danger">Admin</span> }
                             <ul className='list-group'>
                                 <li className='list-group-item'>Age: <span className='fw-bolder'>{profile.age}</span></li>
                                 <li className='list-group-item'>Gender: <span className='fw-bolder'>{profile.gender}</span></li>

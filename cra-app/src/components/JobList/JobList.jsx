@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import MainLayout from "../Layout/MainLayout";
 
 const jobList = [
     {
@@ -31,9 +32,12 @@ const jobList = [
     },
 ]
 
-class JobList extends Component {
-    render() {
-        return (
+function JobList() {
+    // const handleClick = (job) => {
+    //     console.log(job);
+    // }
+    return (
+        <MainLayout>
             <section>
                 <table className='table table-striped table-hover'>
                     <thead className='table-success '>
@@ -49,28 +53,52 @@ class JobList extends Component {
                     <tbody>
                         {
                             jobList.map((job) => (
-                                <tr key={job.id}>
-                                    <td>{job.id}</td>
-                                    <td>{job.name}</td>
-                                    <td>{job.count}</td>
-                                    <td><span className={`${job.status == 'Done' ? 'badge bg-success' : 'badge bg-warning'}`}>{job.status}</span></td>
-                                    <td>{job.hrName}</td>
-                                    <td>
-                                        <button className='btn btn-outline-primary btn-sm me-1'>
-                                            <i className='fa fa-eye' />
-                                        </button>
-                                        <button className='btn btn-outline-danger btn-sm'>
-                                            <i className='fa fa-trash' />
-                                        </button>
-                                    </td>
-                                </tr>
+                                // <TableRow 
+                                //     id={job.id}
+                                //     name = {job.name}
+                                //     count = {job.count}
+                                //     status = {job.status}
+                                //     hrName = {job.hrName}
+                                //     onClick = { () => handleClick(job) }
+                                // />
+                                // <TableRow key={job.id}
+                                //     {...job}
+                                //     onClick = { () => handleClick(job) }
+                                // />
+                                <TableRow key={job.id} {...job} />
                             ))
                         }
                     </tbody>
                 </table>
             </section>
-        )
+        </MainLayout>
+    )
+}
+
+function TableRow(props) {
+    // console.log(props);
+    const handleClick = (job) => {
+        console.log(job);
     }
+    return (
+        <tr >
+            <td>{props.id}</td>
+            <td>{props.name}</td>
+            <td>{props.count}</td>
+            <td><span className={`${props.status == 'Done' ? 'badge bg-success' : 'badge bg-warning'}`}>{props.status}</span></td>
+            <td>{props.hrName}</td>
+            <td>
+                <button className='btn btn-outline-primary btn-sm me-1'>
+                    <i className='fa fa-eye'
+                        onClick={() => handleClick(props)}
+                    />
+                </button>
+                <button className='btn btn-outline-danger btn-sm'>
+                    <i className='fa fa-trash' />
+                </button>
+            </td>
+        </tr>
+    )
 }
 
 export default JobList;
