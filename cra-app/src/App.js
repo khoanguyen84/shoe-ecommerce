@@ -7,6 +7,9 @@ import Heading from './components/Heading/Heading';
 import Form from './components/Form/Form';
 import Header from './components/Layout/Header';
 import Footer from './components/Layout/Footer';
+import Content from './components/Content/Content';
+import Paragraph from './components/Form/Paragraph';
+import Para from './components/Content/Para';
 
 function App() {
   return (
@@ -19,9 +22,10 @@ function App() {
       {/* <Form/> */}
       {/* <Header/> */}
       {/* <JobList/> */}
-      <Profile/>
-       {/* <FormRegister/> */}
+      {/* <Profile/> */}
+      {/* <FormRegister/> */}
       {/* <Footer/> */}
+      <Para/>
     </div>
   );
 }
