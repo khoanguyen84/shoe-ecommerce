@@ -4,6 +4,7 @@ import TwoWayBindingFormSubmit from './components/TwoWayBindingFormSubmit';
 import TwoWayBindingFormSubmit2 from './components/TwoWayBindingFormSubmit2';
 import UseState from './components/UseState';
 import TwoWayBindingFormSubmit3 from './components/TwoWayBindingFormSubmit3';
+import TimerApp from './components/TimerApp';
 
 function App() {
   return (
