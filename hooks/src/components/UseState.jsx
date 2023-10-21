@@ -4,7 +4,7 @@ import React, { useState } from "react";
 // Nhiệm vụ của useState: quản lý trạng thái trong component
 // input: initState là tất cả các kiểu dữ liệu có trong js
 //      - number, string, boolean, null, undefined
-//      - array, object, callback
+//      - array, object, callback/function
 // output: trả về 1 mảng, mảng này có 2 giá trị.
 //          giá trị thứ nhất cùng kiểu dữ mà initState trả về
 //          giá trị thứ hai là một hàm, hàm này có nhiệm vụ cập nhật value mới cho giá trị thứ nhất
