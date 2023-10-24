@@ -81,8 +81,8 @@ function PlayListApp() {
                                 { console.log('inside map', music)}
                                 {
                                     selectIndex == index ?
-                                        <input className="form-control" value={newMusic || song || music}
-                                            onInput={(e) => setNewMusic(e.target.value || undefined)}
+                                        <input className="form-control" value={newMusic}
+                                            onInput={(e) => setNewMusic(e.target.value)}
                                         />
                                         : song
                                 }
@@ -105,7 +105,10 @@ function PlayListApp() {
                                             <>
                                                 <span className="d-inline-block" data-bs-toggle="tooltip" title="edit">
                                                     <i role="button" className="fa-solid fa-pen-to-square text-success me-2"
-                                                        onClick={() => setSelectIndex(index)}
+                                                        onClick={() => {
+                                                            setSelectIndex(index)
+                                                            setNewMusic(playlist[index])
+                                                        }}
                                                     />
                                                 </span>
                                                 <span className="d-inline-block" data-bs-toggle="tooltip" title="remove">
