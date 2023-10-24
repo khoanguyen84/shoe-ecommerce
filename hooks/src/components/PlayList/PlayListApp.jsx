@@ -9,8 +9,8 @@ function PlayListApp() {
         "Em của ngày hôm qua"
     ])
 
-    const [music, setMusic] = useState()
-    const [newMusic, setNewMusic] = useState()
+    const [music, setMusic] = useState(undefined)
+    const [newMusic, setNewMusic] = useState(undefined)
 
     const [selectIndex, setSelectIndex] = useState(-1)
 
@@ -19,7 +19,7 @@ function PlayListApp() {
     const handleAddMusic = (e) => {
         e.preventDefault()
         setPlaylist([...playlist, music])
-        setMusic('')
+        setMusic(undefined)
         // setShowAlert(true)
         toast.success('Music added success')
     }
@@ -38,19 +38,21 @@ function PlayListApp() {
 
     const handleCancelEdit = () => {
         setSelectIndex(-1)
-        setNewMusic()
+        setNewMusic(undefined)
     }
     const handleUpdateMusic = (idx) => {
         if (newMusic) {
             playlist[idx] = newMusic
         }
-        setNewMusic()
+        setNewMusic(undefined)
         setSelectIndex(-1)
         setPlaylist(playlist)
         // setShowAlert(true)
         toast.info('Music updated success', { theme: 'dark',  position: 'bottom-right' })
     }
 
+    console.log('newMusic', newMusic);
+    console.log('music', music);
     return (
         <div className="container mt-3">
             <h1 className="display-6 text-warning fw-bolder">
@@ -74,14 +76,15 @@ function PlayListApp() {
             <div className="w-50 mt-3">
                 <ul className="list-group">
                     {
-                        playlist.map((music, index) => (
+                        playlist.map((song, index) => (
                             <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+                                { console.log('inside map', music)}
                                 {
                                     selectIndex == index ?
-                                        <input className="form-control" value={newMusic || music}
-                                            onInput={(e) => setNewMusic(e.target.value)}
+                                        <input className="form-control" value={newMusic || song || music}
+                                            onInput={(e) => setNewMusic(e.target.value || undefined)}
                                         />
-                                        : music
+                                        : song
                                 }
                                 <div className="d-flex">
                                     {
@@ -107,7 +110,7 @@ function PlayListApp() {
                                                 </span>
                                                 <span className="d-inline-block" data-bs-toggle="tooltip" title="remove">
                                                     <i role="button" className="fa-solid fa-trash text-danger"
-                                                        onClick={() => handleRemoveMusic(index, music)}
+                                                        onClick={() => handleRemoveMusic(index, song)}
                                                     />
                                                 </span>
                                             </>
