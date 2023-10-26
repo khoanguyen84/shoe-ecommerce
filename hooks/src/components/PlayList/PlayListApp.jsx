@@ -107,7 +107,7 @@ function PlayListApp() {
                                                     <i role="button" className="fa-solid fa-pen-to-square text-success me-2"
                                                         onClick={() => {
                                                             setSelectIndex(index)
-                                                            setNewMusic(playlist[index])
+                                                            setNewMusic(song)
                                                         }}
                                                     />
                                                 </span>
