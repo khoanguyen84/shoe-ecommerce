@@ -78,6 +78,24 @@ function CreateStaff(){
         if(form.values.fullname && form.values.email){
             console.log(form.values);
         }
+        else{
+            setForm({
+                ...form,
+                values: {
+                    ...form.values,
+                    fullname: '',
+                    email: ''
+                },
+                errors: {
+                    'fullname': 'fullname is a required field',
+                    'email': 'email is a required field'
+                },
+                touch: {
+                    'fullname': true,
+                    'email': true
+                }
+            })
+        }
     }
     return (
         <>
@@ -102,7 +120,7 @@ function CreateStaff(){
                 <div className="form-group mb-2">
                     <label></label>
                     <button type="submit" className="btn btn-sm btn-warning me-3">Create</button>
-                    <button type="cancel" className="btn btn-sm btn-dark"
+                    <button type="button" className="btn btn-sm btn-dark"
                         onClick={handleCancel}
                     >Cancel</button>
                 </div>
