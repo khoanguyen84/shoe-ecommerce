@@ -19,7 +19,10 @@ const schema = yup.object({
         .required(),
     confirmPassword: yup.string()
                     .required()
-                    .oneOf([yup.ref('password')], "confirm password does not match")
+                    .oneOf([yup.ref('password')], "confirm password does not match"),
+    dob: yup.date()
+        .required()
+        .typeError('dob is a required field')
 
 })
 
@@ -80,6 +83,15 @@ function CreateStaff() {
                     {...register('confirmPassword')}
                 />
                 <span className="invalid-feedback">{errors?.confirmPassword?.message}</span>
+            </div>
+            <div className="form-group mb-3 has-validation">
+                <label className="form-lable">Date of birth</label>
+                <input type="date"
+                    className={`form-control ${errors?.dob?.message ? 'is-invalid' : ''}`}
+                    {...register('dob')}
+                />
+                <span className='invalid-feedback'>
+                    {errors?.dob?.message}</span>
             </div>
             <div className="form-group mb-3 has-validation">
                 <label className="form-lable">Age</label>
