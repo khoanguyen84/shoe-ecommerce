@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import LoginForm from "./LoginForm";
+import { ThemeContext } from "../Context/ThemeContext";
 
-function Panel({ theme, handleChangeTheme }) {
+function Panel() {
+    const { theme } = useContext(ThemeContext)
     return (
         <div className={`border p-3 ${theme}`}>
-            <LoginForm theme={theme} handleChangeTheme={handleChangeTheme} />
+            <LoginForm />
         </div>
     )
 }
