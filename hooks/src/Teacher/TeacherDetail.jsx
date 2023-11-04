@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import dayjs from "dayjs";
 
 function TeacherDetail() {
     const { teacherId } = useParams()
@@ -30,6 +31,9 @@ function TeacherDetail() {
                         <div className="col-md-10">
                             <div>Fullname: {teacherDetail.name}</div>
                             <div>Email: {teacherDetail.email}</div>
+                            <div>Dob: {dayjs(teacherDetail.dob).format('DD/MM/YYYY')}</div>
+                            <div>Gender: {teacherDetail.gender ? 'Male' : ' Female'}</div>
+                            <div>Department: {teacherDetail.department?.name}</div>
                         </div>
                     </div>
                 )
