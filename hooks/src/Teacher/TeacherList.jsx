@@ -6,13 +6,18 @@ import * as yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup"
 import { toast } from 'react-toastify'
 import Swal from "sweetalert2";
+import TeacherService from "../services/teacherService";
+import DepartmentService from "../services/departmentService";
+import NoAvatar from '../../src/asset/image/noavatar.jpg'
+import FileService from "../services/fileService";
 
 const schema = yup.object({
     name: yup.string().required(),
     email: yup.string().required().email(),
     dob: yup.date().required().typeError('dob is a required field'),
-    avatar: yup.string().required().url(),
+    // avatar: yup.string().required().url(),
     gender: yup.string().required()
+
 })
 function TeacherList() {
     const [teacherList, setTeacherList] = useState([])
@@ -20,13 +25,15 @@ function TeacherList() {
     const [departmentList, setDepartmentList] = useState([])
     const [toggleForm, setToggleForm] = useState(false)
     const [removeTeacher, setRemoveTeacher] = useState({})
+    const [temporaryAvatar, setTemporaryAvatar] = useState()
+    const [fileAvatar, setFileAvatar] = useState({})
     const { register, handleSubmit, formState: { errors }, reset } = useForm({
         resolver: yupResolver(schema)
     })
+    
     async function fetchData() {
-        let res = await fetch('https://6543a6a201b5e279de20ba5b.mockapi.io/teacher')
-        let data = await res.json();
-        setTeacherList(data)
+        let teacherRes = await TeacherService.getTeachers()
+        setTeacherList(teacherRes.data)
         setIsLoading(false)
     }
 
@@ -38,33 +45,26 @@ function TeacherList() {
     useEffect(() => {
         setIsLoading(true)
         async function fetchDepartment() {
-            let departRes = await fetch('https://6543a6a201b5e279de20ba5b.mockapi.io/department')
-            let data = await departRes.json();
-            setDepartmentList(data)
+            let departRes = await DepartmentService.getDepartments();
+            setDepartmentList(departRes.data)
             setIsLoading(false)
         }
         fetchDepartment();
     }, [])
 
-    const handleAddTeacher = (data) => {
+    const handleAddTeacher = async (data) => {
         data.department = JSON.parse(data.department)
+        data.avatar = temporaryAvatar;
         setIsLoading(true)
-        async function postTecher() {
-            const createTeacherRes = await fetch('https://6543a6a201b5e279de20ba5b.mockapi.io/teacher', {
-                method: "POST",
-                headers: {
-                    "Content-Type": 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            const createTeacherResult = await createTeacherRes.json();
-            if (createTeacherRes) {
-                toast.success(`Teacher ${createTeacherRes.name} added success!`)
-                fetchData()
-                reset()
-            }
+        let createTeacherRes = await TeacherService.createTeacher(data)
+        if (createTeacherRes.data) {
+            toast.success(`Teacher ${createTeacherRes.name} added success!`)
+            fetchData()
+            reset()
+            setTemporaryAvatar()
+            setFileAvatar()
         }
-        postTecher();
+        setIsLoading(false)
     }
     const handleRemoveTeacher = (teacher) => {
         Swal.fire({
@@ -76,29 +76,30 @@ function TeacherList() {
             cancelButtonColor: "#d33",
             confirmButtonText: "Confirm",
             cancelButtonText: "No"
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
-                fetch(`https://6543a6a201b5e279de20ba5b.mockapi.io/teacher/${teacher.id}`, {
-                    method: "DELETE"
-                })
-                    .then((res) => res.json())
-                    .then(result => {
-                        toast.success(`Teacher ${result.name} removed success`)
-                        setRemoveTeacher(result)
-                    })
+                let delTeacherRes = await TeacherService.deleteTeacher(teacher.id)
+                if(delTeacherRes.data){
+                    toast.success(`Teacher ${result.name} removed success`)
+                    setRemoveTeacher(delTeacherRes.data)
+                }
+                else{
+                    toast.error('System error')
+                }
             }
         });
-        // let confirm =  window.confirm(`Are you sure remove teacher ${teacher.name}?`)
-        // if(confirm){
-        //     fetch(`https://6543a6a201b5e279de20ba5b.mockapi.io/teacher/${teacher.id}`, {
-        //         method: "DELETE"
-        //     })
-        //         .then((res) => res.json())
-        //         .then(result => {
-        //             toast.success(`Teacher ${result.name} removed success`)
-        //             setRemoveTeacher(result)
-        //         })
-        // }
+    }
+
+    const handleSelectAvatar = (e) => {
+        const temporaryAvatar = URL.createObjectURL(e.target.files[0])
+        setTemporaryAvatar(temporaryAvatar)
+        setFileAvatar(e.target.files[0])
+    }
+
+    const handleUploadAvatar = async () => {
+        let uploadRes = await FileService.upload(fileAvatar)
+        setTemporaryAvatar(uploadRes.data.secure_url)
+        toast.success('Avatar uploaded success')
     }
     return (
         <>
@@ -115,7 +116,7 @@ function TeacherList() {
                     {toggleForm && (
                         <form onSubmit={handleSubmit(handleAddTeacher)}>
                             <div className="row">
-                                <div className="col-md-6">
+                                <div className="col-md-4">
                                     <div className="form-group mb-3">
                                         <label className="form-label">Fullname <span className="text-danger">(*)</span></label>
                                         <input type="text" className="form-control" placeholder="Fullname"
@@ -142,14 +143,14 @@ function TeacherList() {
                                         <button type="button" className="btn btn-sm btn-dark me-3" onClick={() => reset()}>Cancel</button>
                                     </div>
                                 </div>
-                                <div className="col-md-6">
-                                    <div className="form-group mb-3">
+                                <div className="col-md-4">
+                                    {/* <div className="form-group mb-3">
                                         <label className="form-label">Avatar <span className="text-danger">(*)</span></label>
                                         <input type="url" className="form-control" placeholder="Avatar URL"
                                             {...register('avatar')}
                                         />
                                         <span className="text-danger">{errors.avatar?.message}</span>
-                                    </div>
+                                    </div> */}
                                     <div className="form-group mb-3">
                                         <label className="form-label">Gender</label>
                                         <div className="mt-2">
@@ -173,6 +174,19 @@ function TeacherList() {
                                                 ))
                                             }
                                         </select>
+                                    </div>
+                                </div>
+                                <div className="col-md-4">
+                                    <div className="form-group d-flex flex-column align-items-center">
+                                        <img className="avatar-md" src={temporaryAvatar || NoAvatar} alt="" 
+                                            onClick={() => document.getElementById('fileAvatar').click()}
+                                        />
+                                        <input id="fileAvatar" type="file" className="d-none" accept="image/*"
+                                            onChange={handleSelectAvatar}
+                                        />
+                                        <button type="button" className="btn btn-sm btn-warning mt-1"
+                                            onClick={handleUploadAvatar}
+                                        >Upload</button>
                                     </div>
                                 </div>
                             </div>

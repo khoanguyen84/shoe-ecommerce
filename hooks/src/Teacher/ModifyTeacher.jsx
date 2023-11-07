@@ -5,6 +5,8 @@ import * as yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup"
 import { toast } from 'react-toastify'
 import dayjs from "dayjs";
+import TeacherService from "../services/teacherService";
+import DepartmentService from "../services/departmentService";
 
 const schema = yup.object({
     name: yup.string().required(),
@@ -25,47 +27,39 @@ function ModifyTeacher() {
 
     useEffect(() => {
         setIsLoading(true)
-        fetch(`https://6543a6a201b5e279de20ba5b.mockapi.io/teacher/${teacherId}`)
-            .then(res => res.json())
-            .then(data => {
-                setTeacherDetail(data)
-                setValue("name", data.name)
-                setValue("email", data.email)
-                setValue("dob", dayjs(data.dob).format('YYYY-MM-DD'))
-                setValue("avatar", data.avatar)
-                setValue("gender", data.gender)
-                setValue("department", JSON.stringify(data.department))
-
-                setIsLoading(false)
-            })
+        async function getTeacher() {
+            let teacherRes = await TeacherService.getTeacher(teacherId)
+            setTeacherDetail(teacherRes.data)
+            setValue("name", teacherRes.data.name)
+            setValue("email", teacherRes.data.email)
+            setValue("dob", dayjs(teacherRes.data.dob).format('YYYY-MM-DD'))
+            setValue("avatar", teacherRes.data.avatar)
+            setValue("gender", teacherRes.data.gender)
+            setValue("department", JSON.stringify(teacherRes.data.department))
+            setIsLoading(false)
+        }
+        getTeacher();
     }, [teacherId])
 
     useEffect(() => {
         setIsLoading(true)
-        fetch('https://6543a6a201b5e279de20ba5b.mockapi.io/department')
-            .then((response) => response.json())
-            .then((data) => {
-                setDepartmentList(data)
-                setIsLoading(false)
-            })
+        async function fetchDepartment() {
+            let departRes = await DepartmentService.getDepartments();
+            setDepartmentList(departRes.data)
+            setIsLoading(false)
+        }
+        fetchDepartment();
     }, [])
 
-    const handleUpdateTeacher = (data) => {
+    const handleUpdateTeacher = async (data) => {
         data.department = JSON.parse(data.department)
         setIsLoading(true)
-        fetch(`https://6543a6a201b5e279de20ba5b.mockapi.io/teacher/${teacherId}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": 'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then((res) => res.json())
-            .then((result) => {
-                toast.success(`Teacher ${result.name} modified success!`)
-                setIsLoading(false)
-                navigate("/teacher")
-                // setTeacherDetail(result)
-            })
+        let editTeacherRes = await TeacherService.modifyTeacher(data, teacherId)
+        if (editTeacherRes.data) {
+            toast.success(`Teacher ${editTeacherRes.data.name} modified success!`)
+            setIsLoading(false)
+            navigate("/teacher")
+        }
     }
     console.log(teacherDetail);
     return (
