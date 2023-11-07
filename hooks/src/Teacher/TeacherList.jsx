@@ -23,46 +23,48 @@ function TeacherList() {
     const { register, handleSubmit, formState: { errors }, reset } = useForm({
         resolver: yupResolver(schema)
     })
+    async function fetchData() {
+        let res = await fetch('https://6543a6a201b5e279de20ba5b.mockapi.io/teacher')
+        let data = await res.json();
+        setTeacherList(data)
+        setIsLoading(false)
+    }
+
     useEffect(() => {
         setIsLoading(true)
-        fetch('https://6543a6a201b5e279de20ba5b.mockapi.io/teacher')
-            .then((response) => response.json())
-            .then((data) => {
-                setTeacherList(data)
-                setIsLoading(false)
-            })
+        fetchData()
     }, [removeTeacher])
 
     useEffect(() => {
         setIsLoading(true)
-        fetch('https://6543a6a201b5e279de20ba5b.mockapi.io/department')
-            .then((response) => response.json())
-            .then((data) => {
-                setDepartmentList(data)
-                setIsLoading(false)
-            })
+        async function fetchDepartment() {
+            let departRes = await fetch('https://6543a6a201b5e279de20ba5b.mockapi.io/department')
+            let data = await departRes.json();
+            setDepartmentList(data)
+            setIsLoading(false)
+        }
+        fetchDepartment();
     }, [])
 
     const handleAddTeacher = (data) => {
         data.department = JSON.parse(data.department)
         setIsLoading(true)
-        fetch('https://6543a6a201b5e279de20ba5b.mockapi.io/teacher', {
-            method: "POST",
-            headers: {
-                "Content-Type": 'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then((res) => res.json())
-            .then((result) => {
-                toast.success(`Teacher ${result.name} added success!`)
-                fetch('https://6543a6a201b5e279de20ba5b.mockapi.io/teacher')
-                    .then((response) => response.json())
-                    .then((data) => {
-                        setTeacherList(data)
-                        setIsLoading(false)
-                        reset()
-                    })
+        async function postTecher() {
+            const createTeacherRes = await fetch('https://6543a6a201b5e279de20ba5b.mockapi.io/teacher', {
+                method: "POST",
+                headers: {
+                    "Content-Type": 'application/json'
+                },
+                body: JSON.stringify(data)
             })
+            const createTeacherResult = await createTeacherRes.json();
+            if (createTeacherRes) {
+                toast.success(`Teacher ${createTeacherRes.name} added success!`)
+                fetchData()
+                reset()
+            }
+        }
+        postTecher();
     }
     const handleRemoveTeacher = (teacher) => {
         Swal.fire({
