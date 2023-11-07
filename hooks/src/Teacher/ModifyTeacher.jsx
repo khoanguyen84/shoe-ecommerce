@@ -33,7 +33,7 @@ function ModifyTeacher() {
                 setValue("email", data.email)
                 setValue("dob", dayjs(data.dob).format('YYYY-MM-DD'))
                 setValue("avatar", data.avatar)
-                setValue("gender", Boolean(data.gender))
+                setValue("gender", data.gender)
                 setValue("department", JSON.stringify(data.department))
 
                 setIsLoading(false)
@@ -52,7 +52,6 @@ function ModifyTeacher() {
 
     const handleUpdateTeacher = (data) => {
         data.department = JSON.parse(data.department)
-        data.gender = Boolean(data.gender)
         setIsLoading(true)
         fetch(`https://6543a6a201b5e279de20ba5b.mockapi.io/teacher/${teacherId}`, {
             method: "PUT",
@@ -119,17 +118,17 @@ function ModifyTeacher() {
                                         <label className="form-label">Gender</label>
                                         <div className="mt-2">
                                             {
-                                                teacherDetail.gender ? (
+                                                teacherDetail.gender == "Male" ? (
                                                     <>
                                                         <div className="form-check form-check-inline">
                                                             <input className="form-check-input" type="radio"
                                                                 checked
-                                                                value={true} {...register('gender')} />
+                                                                value={"Male"} {...register('gender')} />
                                                             <label className="form-check-label">Male</label>
                                                         </div>
                                                         <div className="form-check form-check-inline">
                                                             <input className="form-check-input" type="radio"
-                                                                value={false} {...register('gender')} />
+                                                                value={"Female"} {...register('gender')} />
                                                             <label className="form-check-label">Female</label>
                                                         </div>
                                                     </>
@@ -137,13 +136,13 @@ function ModifyTeacher() {
                                                     <>
                                                         <div className="form-check form-check-inline">
                                                             <input className="form-check-input" type="radio"
-                                                                value={true} {...register('gender')} />
+                                                                value={"Male"} {...register('gender')} />
                                                             <label className="form-check-label">Male</label>
                                                         </div>
                                                         <div className="form-check form-check-inline">
                                                             <input className="form-check-input" type="radio"
                                                                 checked
-                                                                value={false} {...register('gender')} />
+                                                                value={"Female"} {...register('gender')} />
                                                             <label className="form-check-label">Female</label>
                                                         </div>
                                                     </>
