@@ -1,2 +1,6 @@
-export const DEPARTMENT_API_URL = 'https://6543a6a201b5e279de20ba5b.mockapi.io/department'
-export const TEACHER_API_URL = 'https://6543a6a201b5e279de20ba5b.mockapi.io/teacher'
+export const DEPARTMENT_API_URL = 'https://json-server-restful-api.vercel.app/api/department'
+// 'http://localhost:3000/department'
+//'https://6543a6a201b5e279de20ba5b.mockapi.io/department'
+export const TEACHER_API_URL = 'https://json-server-restful-api.vercel.app/api/teacher'
+//'http://localhost:3000/teacher'
+//'https://6543a6a201b5e279de20ba5b.mockapi.io/teacher'
