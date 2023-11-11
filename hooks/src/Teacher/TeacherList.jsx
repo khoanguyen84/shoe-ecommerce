@@ -10,6 +10,7 @@ import TeacherService from "../services/teacherService";
 import DepartmentService from "../services/departmentService";
 import NoAvatar from '../../src/asset/image/noavatar.jpg'
 import FileService from "../services/fileService";
+import Spinner from "../component/Spinner";
 
 const schema = yup.object({
     name: yup.string().required(),
@@ -27,10 +28,11 @@ function TeacherList() {
     const [removeTeacher, setRemoveTeacher] = useState({})
     const [temporaryAvatar, setTemporaryAvatar] = useState()
     const [fileAvatar, setFileAvatar] = useState({})
+    const [isUploading, setIsUploading] = useState(false)
     const { register, handleSubmit, formState: { errors }, reset } = useForm({
         resolver: yupResolver(schema)
     })
-    
+
     async function fetchData() {
         let teacherRes = await TeacherService.getTeachers()
         setTeacherList(teacherRes.data)
@@ -79,11 +81,11 @@ function TeacherList() {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 let delTeacherRes = await TeacherService.deleteTeacher(teacher.id)
-                if(delTeacherRes.data){
+                if (delTeacherRes.data) {
                     toast.success(`Teacher ${result.name} removed success`)
                     setRemoveTeacher(delTeacherRes.data)
                 }
-                else{
+                else {
                     toast.error('System error')
                 }
             }
@@ -97,9 +99,11 @@ function TeacherList() {
     }
 
     const handleUploadAvatar = async () => {
+        setIsUploading(true)
         let uploadRes = await FileService.upload(fileAvatar)
         setTemporaryAvatar(uploadRes.data.secure_url)
         toast.success('Avatar uploaded success')
+        setIsUploading(false)
     }
     return (
         <>
@@ -178,25 +182,34 @@ function TeacherList() {
                                 </div>
                                 <div className="col-md-4">
                                     <div className="form-group d-flex flex-column align-items-center">
-                                        <img className="avatar-md" src={temporaryAvatar || NoAvatar} alt="" 
+                                        <img className="avatar-md" src={temporaryAvatar || NoAvatar} alt=""
                                             onClick={() => document.getElementById('fileAvatar').click()}
                                         />
                                         <input id="fileAvatar" type="file" className="d-none" accept="image/*"
                                             onChange={handleSelectAvatar}
                                         />
-                                        <button type="button" className="btn btn-sm btn-warning mt-1"
-                                            onClick={handleUploadAvatar}
-                                        >Upload</button>
+                                        {
+                                            isUploading ? (
+                                                <button type="button" className="btn btn-sm btn-warning" disabled>
+                                                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                    Uploading...
+                                                </button>
+                                            ) : (
+                                                <button type="button" className="btn btn-sm btn-warning mt-1"
+                                                    onClick={handleUploadAvatar}
+                                                >Upload</button>
+                                            )
+                                        }
                                     </div>
                                 </div>
                             </div>
                         </form>
                     )}
                 </div>
-            </section>
+            </section >
             <section>
                 {
-                    isLoading ? <p>Loading...</p> : (
+                    isLoading ? <Spinner/> : (
                         <table className="table">
                             <thead>
                                 <tr>
