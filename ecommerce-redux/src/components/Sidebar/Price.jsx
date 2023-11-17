@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
+import { EcommerceContext } from "../../context/EcommerceContext";
+import { setSearchPrice } from "../../reducer/actions";
 
 const prices = [
     {
@@ -15,7 +17,7 @@ const prices = [
     },
     {
         value: [100, 150],
-        name: "$100-$50"
+        name: "$100-$150"
     },
     {
         value: [150, 150],
@@ -24,18 +26,23 @@ const prices = [
 
 ]
 function Price() {
+    const {state, dispatch} = useContext(EcommerceContext)
     return (
         <div className="py-2 d-flex flex-column justify-content-center">
             <h5>Price</h5>
             <div className="form-group">
                 {
                     prices.map(price => (
-                        <div key={price} className="form-check py-1">
+                        <div key={price.value} className="form-check py-1">
                             <input className="form-check-input" type="radio" name="price"
                                 value={price.value}
-                                defaultChecked={price.name === 'All'}
+                                id={`price_${price.value.toLocaleString()}`}
+                                defaultChecked={price.value.toString() === state?.filters?.price}
+                                onChange={(e) => dispatch(setSearchPrice(e.target.value))}
                             />
-                            <label className="form-check-label">{price.name}</label>
+                            <label role="button" htmlFor={`price_${price.value.toLocaleString()}`} 
+                                className={`form-check-label ${price.value.toString() === state?.filters?.price ? 'text-decoration-underline fw-bolder' : ''}`}
+                            >{price.name}</label>
                         </div>
                     ))
                 }
