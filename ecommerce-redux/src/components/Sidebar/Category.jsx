@@ -13,7 +13,7 @@ function Category() {
                         <div key={cat} className="form-check py-1">
                             <input className="form-check-input" type="radio" name="category"
                                 value={cat}
-                                // checked={cat === 'All'}
+                                defaultChecked={cat === 'All'}
                             />
                             <label className="form-check-label">{cat}</label>
                         </div>
