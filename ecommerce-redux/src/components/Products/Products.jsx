@@ -20,9 +20,6 @@ function Products() {
                 return p.company.toLowerCase() === recommended.toLowerCase()
             }
             return p
-            // return (category !== 'All' ? (p.category.toLowerCase() === category.toLowerCase()) : p) ||
-            //     (color !== 'All' ? (p.color.toLowerCase() === color.toLowerCase()) : p) ||
-            //     (recommended != 'All' ? (p.recommended.toLowerCase() === recommended.toLowerCase()) : p)
         }
 
         )
