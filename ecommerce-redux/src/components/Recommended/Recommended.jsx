@@ -32,7 +32,7 @@ function Recommended() {
                         <button key={recmd}
                             className={
                                 `btn btn-sm btn-outline-secondary me-1
-                                    ${recmd.value == 'All' ? 'active' : ''}
+                                    ${recmd.value === 'All' ? 'active' : ''}
                                 `
                             }
                             type="button"

@@ -13,8 +13,8 @@ function Colors() {
                         <div key={color} className="form-check py-1">
                             <input className="form-check-input" type="radio" name="color"
                                 value={color}
-                                // checked={color == 'All'}
-                                style={color == 'All' ? { backgroundImage: 'linear-gradient(to right, red, green)' } : color != 'White' ? { backgroundColor: color } : {}}
+                                // checked={color === 'All'}
+                                style={color === 'All' ? { backgroundImage: 'linear-gradient(to right, red, green)' } : color !== 'White' ? { backgroundColor: color } : {}}
                             />
                             <label className="form-check-label">{color}</label>
                         </div>
