@@ -18,7 +18,7 @@ function Colors() {
                                 id={`color_${index}`}
                                 value={color}
                                 defaultChecked={color === 'All'}
-                                style={color === state?.filters?.color ? { backgroundImage: 'linear-gradient(to right, red, green)' } : color !== 'White' ? { backgroundColor: color } : {}}
+                                style={color === 'All' ? { backgroundImage: 'linear-gradient(to right, red, green)' } : color !== 'White' ? { backgroundColor: color } : {}}
                                 onChange={(e) => dispatch(setSearchColor(e.target.value))}
                             />
                             <label
