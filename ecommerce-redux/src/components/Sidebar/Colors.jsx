@@ -16,7 +16,11 @@ function Colors() {
                                 defaultChecked={color === 'All'}
                                 style={color === 'All' ? { backgroundImage: 'linear-gradient(to right, red, green)' } : color !== 'White' ? { backgroundColor: color } : {}}
                             />
-                            <label className="form-check-label">{color}</label>
+                            <label 
+                                className={`form-check-label ${color === 'All' ? 'text-decoration-underline fw-bolder' : ''}`}
+                            >
+                                {color}
+                            </label>
                         </div>
                     ))
                 }

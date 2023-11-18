@@ -2,23 +2,23 @@ import React from "react";
 
 const prices = [
     {
-        value: [0, 0],
+        value: '0,0',
         name: "All"
     },
     {
-        value: [0, 50],
+        value: '0,50',
         name: "$0-$50"
     },
     {
-        value: [50, 100],
+        value: '50,100',
         name: "$50-$100"
     },
     {
-        value: [100, 150],
-        name: "$100-$50"
+        value: '100,150',
+        name: "$100-$150"
     },
     {
-        value: [150, 150],
+        value: '150,150',
         name: "Over $150"
     },
 
@@ -35,7 +35,11 @@ function Price() {
                                 value={price.value}
                                 defaultChecked={price.name === 'All'}
                             />
-                            <label className="form-check-label">{price.name}</label>
+                            <label 
+                                className={`form-check-label ${price.name === 'All' ? 'text-decoration-underline fw-bolder' : ''}`}
+                            >
+                                {price.name}
+                            </label>
                         </div>
                     ))
                 }

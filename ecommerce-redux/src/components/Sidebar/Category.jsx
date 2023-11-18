@@ -15,7 +15,11 @@ function Category() {
                                 value={cat}
                                 defaultChecked={cat === 'All'}
                             />
-                            <label className="form-check-label">{cat}</label>
+                            <label 
+                                className={`form-check-label ${cat === 'All' ? 'text-decoration-underline fw-bolder' : ''}`}
+                            >
+                                {cat}
+                            </label>
                         </div>
                     ))
                 }

@@ -5,7 +5,7 @@ function Products(){
     return (
         <div className="py-2 d-flex flex-column justify-content-center">
             <h5>Products</h5>
-            <div className="d-flex flex-wrap justify-content-between">
+            <div className="row">
                 <Product/>
                 <Product/>
                 <Product/>

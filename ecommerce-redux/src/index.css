@@ -10,3 +10,8 @@ body {
 input[type='search']::placeholder {
   color: rgba(0, 0, 0, .2)
 }
+
+.btn-cart:hover {
+  scale: 1.2;
+  cursor: pointer;
+}
