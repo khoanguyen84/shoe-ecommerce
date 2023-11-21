@@ -65,7 +65,6 @@ function Products() {
                 {
                     remainProductList?.map((product) => (
                         <Product key={product.id} product={product} />
-
                     ))
                 }
             </div>
