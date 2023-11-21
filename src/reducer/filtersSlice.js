@@ -13,31 +13,31 @@ const filtersReducer = (state = initState, action) => {
                 ...state,
                 searchText: action.payload
             }
-        };
+        }
         case 'filters/searchRecommended': {
             return {
                 ...state,
                 recommended: action.payload
             }
-        };
+        }
         case 'filters/searchCategory': {
             return {
                 ...state,
                 category: action.payload
             }
-        };
+        }
         case 'filters/searchPrice': {
             return {
                 ...state,
                 price: action.payload
             }
-        };
+        }
         case 'filters/searchColor': {
             return {
                 ...state,
                 color: action.payload
             }
-        };
+        }
         default: {
             return state
         }

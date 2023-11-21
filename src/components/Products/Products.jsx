@@ -39,13 +39,13 @@ function Products() {
         if(recommended !== 'All'){
             queryProducts = queryProducts.filter((p) => p.company.toLowerCase() === recommended.toLowerCase())
         }
-        if(category != 'All') {
+        if(category !== 'All') {
             queryProducts = queryProducts.filter((p) => p.category.toLowerCase() === category.toLowerCase())
         }
-        if(color != 'All') {
+        if(color !== 'All') {
             queryProducts = queryProducts.filter((p) => p.color.toLowerCase() === color.toLowerCase())
         }
-        if(price != '0,0') {
+        if(price !== '0,0') {
             const [min, max] = price.split(',')
             if(min !== max){
                 queryProducts = queryProducts.filter((p) => p.newPrice > Number(min) && p.newPrice <= Number(max))
