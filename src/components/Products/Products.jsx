@@ -1,10 +1,19 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Product from "./Product";
 import { ShoeContext } from "../../context/ShoeContext";
+import { getProductList } from "../../reducer/actions";
 
 function Products() {
-    const { state } = useContext(ShoeContext)
+    const { state, dispatch } = useContext(ShoeContext)
     const { productList, filters: { searchText, recommended, category, color, price } } = state
+    useEffect(() => {
+        async function fetchProductList(){
+            let productListRes = await fetch('https://jsonserver-vercel-api.vercel.app/products')
+            let data = await productListRes.json();
+            dispatch(getProductList(data))
+        }
+        fetchProductList()
+    }, [])
     const queryProducts = () => {
         let filtersProductList = [...productList]
         if (searchText){
@@ -21,7 +30,7 @@ function Products() {
         }
         if(price !== '0,0'){
             const [min, max] = price.split(',')
-            if(min != max){
+            if(min !== max){
                 filtersProductList = filtersProductList.filter((p) => p.newPrice > Number(min) && p.newPrice <= Number(max))
             }
             else {

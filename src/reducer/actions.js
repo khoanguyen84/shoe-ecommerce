@@ -4,6 +4,12 @@
         payload
     }
 */ 
+export const getProductList = (payload) => {
+    return {
+        type: 'productList/fetchData',
+        payload: payload
+    }
+}
 export const setSearchText = (payload) => {
     return {
         type: 'filters/searchText',
