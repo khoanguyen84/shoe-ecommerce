@@ -37,7 +37,7 @@ function Price() {
                                 defaultChecked={price.name === 'All'}
                             />
                             <label 
-                                rolo="button"
+                                role="button"
                                 htmlFor={`price_${index}`}
                                 className={`form-check-label ${price.name === 'All' ? 'text-decoration-underline fw-bolder' : ''}`}
                             >
