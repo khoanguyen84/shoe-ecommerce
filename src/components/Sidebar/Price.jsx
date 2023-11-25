@@ -29,13 +29,16 @@ function Price() {
             <h5>Price</h5>
             <div className="form-group">
                 {
-                    prices.map(price => (
+                    prices.map((price,index) => (
                         <div key={price} className="form-check py-1">
                             <input className="form-check-input" type="radio" name="price"
+                                id={`price_${index}`}
                                 value={price.value}
                                 defaultChecked={price.name === 'All'}
                             />
                             <label 
+                                rolo="button"
+                                htmlFor={`price_${index}`}
                                 className={`form-check-label ${price.name === 'All' ? 'text-decoration-underline fw-bolder' : ''}`}
                             >
                                 {price.name}

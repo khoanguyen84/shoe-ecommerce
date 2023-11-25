@@ -9,13 +9,16 @@ function Category() {
             <h5>Category</h5>
             <div className="form-group">
                 {
-                    categories.map(cat => (
+                    categories.map((cat,index) => (
                         <div key={cat} className="form-check py-1">
                             <input className="form-check-input" type="radio" name="category"
+                                id={`cat_${index}`}
                                 value={cat}
                                 defaultChecked={cat === 'All'}
                             />
                             <label 
+                                htmlFor={`cat_${index}`}
+                                role="button"
                                 className={`form-check-label ${cat === 'All' ? 'text-decoration-underline fw-bolder' : ''}`}
                             >
                                 {cat}
