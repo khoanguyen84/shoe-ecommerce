@@ -91,7 +91,7 @@ const cartSlice = createSlice({
 })
 
 export const checkoutThunkAction = createAsyncThunk('cart/checkoutThunkAction', async (data) => {
-    let orderRes = await fetch('http://localhost:3000/orderList', {
+    let orderRes = await fetch('https://jsonserver-vercel-api.vercel.app/orderList', {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
