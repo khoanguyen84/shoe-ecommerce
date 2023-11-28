@@ -3,13 +3,15 @@ import { FaCartPlus, FaSearch, FaShoppingCart, FaUser } from 'react-icons/fa'
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import filtersSlice from "../../slices/filtersSlice";
-import { searchTextSelector } from "../../redux-toolkit/selectors";
+import { searchTextSelector, cartSelector } from "../../redux-toolkit/selectors";
+
 
 function Navbar() {
+    const cart = useSelector(cartSelector)
     const searchText = useSelector(searchTextSelector)
     const dispatch = useDispatch()
     return (
-        <div className="container d-flex align-items-center border-bottom py-2">
+        <div className="container d-flex align-items-center border-bottom py-2 mt-2">
             <div className="d-flex align-items-center" style={{ minWidth: "180px" }}>
                 <Link to={"/"} className="logo">
                     <FaCartPlus size={22} className="me-2" /> Shoe Ecommerce
@@ -27,10 +29,22 @@ function Navbar() {
                     />
                     <FaSearch size={15} style={{ marginLeft: '-25px', color: 'rgba(0,0,0,.2)' }} />
                 </form>
-                <div className="">
-                    <Link to={'/cart'}>
-                        <FaShoppingCart size={20} className="me-2" role="button" />
-                    </Link>
+                <div className="d-flex">
+                    {
+                        cart.cartDetails.length ? (
+                            <Link to={'/cart'} className="position-relative me-3">
+                                <FaShoppingCart size={20} className="me-2" role="button" />
+                                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    {cart.cartDetails.length}
+                                </span>
+                            </Link>
+                        ) : (
+                            <div>
+                                <FaShoppingCart size={20} className="me-2"/>
+                            </div>
+                        )
+                    }
+
                     <FaUser size={20} role="button" />
                 </div>
             </div>

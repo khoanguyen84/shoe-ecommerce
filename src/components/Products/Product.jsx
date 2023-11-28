@@ -1,8 +1,16 @@
 import React from "react";
 import { FaCartArrowDown, FaStar } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import cartSlice from "../../slices/cartSlice";
+import { toast } from 'react-toastify';
 
 function Product({product}) {
+    const dispatch = useDispatch()
     const {img, title, star, reviews, prevPrice, newPrice} = product
+    const handleAddToCart = (product) => {
+        dispatch(cartSlice.actions.addToCart(product))
+        toast.success(`${product.title} added to cart`, { autoClose: 1000 })
+    }
     return (
         <div className="col-md-3 mb-4">
             <div className="card d-flex align-items-center pt-2">
@@ -29,7 +37,9 @@ function Product({product}) {
                             <del className="line-through me-2">${prevPrice}</del>
                             <span>${newPrice}</span>
                         </div>   
-                        <FaCartArrowDown size={20} className="btn-cart"/>
+                        <FaCartArrowDown size={20} className="btn-cart"
+                            onClick={() => handleAddToCart(product)}
+                        />
                     </div>
                 </div>
             </div>
