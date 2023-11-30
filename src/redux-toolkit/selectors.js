@@ -9,6 +9,8 @@ export const priceSelector = (state) => state.filters.price
 export const searchTextSelector = (state) => state.filters.searchText
 export const categorySelector = (state) => state.filters.category
 export const cartSelector = (state) => state.cart
+export const orderListSelector = (state) => state.orders.orderList
+export const orderLoadingSelector = (state) => state.orders.status
 
 export const remainProducts = createSelector(
     productListSelector,
