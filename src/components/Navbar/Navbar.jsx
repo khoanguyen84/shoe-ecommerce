@@ -40,12 +40,13 @@ function Navbar() {
                             </Link>
                         ) : (
                             <div>
-                                <FaShoppingCart size={20} className="me-2"/>
+                                <FaShoppingCart size={20} className="me-2" />
                             </div>
                         )
                     }
-
-                    <FaUser size={20} role="button" />
+                    <Link to={'/dashboard/order-list'}>
+                        <FaUser size={20} role="button" />
+                    </Link>
                 </div>
             </div>
 
