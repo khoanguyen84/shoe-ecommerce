@@ -39,7 +39,7 @@ function OrderList() {
                                     {
                                         orderList?.map((order) => (
                                             <tr key={order.orderId}>
-                                                <td className="text-end align-middle">{dayjs(Date(order.orderInfo.orderDate)).format('MMM DD YYYY')}</td>
+                                                <td className="text-end align-middle">{dayjs(order.orderInfo.orderDate).format('MMM DD YYYY')}</td>
                                                 <td className="text-end align-middle">
                                                     {order.orderDetails.length}
                                                 </td>
