@@ -70,18 +70,21 @@ function ProductList() {
     const handleNextPage = () => {
         if (page < pagination.totalPage) {
             setPage(page + 1)
+            setDirection('next')
         }
     }
 
     const handlePreviousPage = () => {
         if (page > 1) {
             setPage(page - 1)
+            setDirection('prev')
         }
     }
 
     const handleChangePageSize = (e) => {
         setPageSize(Number(e.target.value))
         setPage(1)
+        setDirection('next')
     }
     
     return (
