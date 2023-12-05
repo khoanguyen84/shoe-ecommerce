@@ -11,6 +11,9 @@ export const categorySelector = (state) => state.filters.category
 export const cartSelector = (state) => state.cart
 export const orderListSelector = (state) => state.orders.orderList
 export const orderLoadingSelector = (state) => state.orders.status
+export const productSelector = (state) => state.productList.product
+export const productPaginationSelector = (state) => state.manageProduct.data
+export const loadingManageSelector = (state) => state.manageProduct.status
 
 export const remainProducts = createSelector(
     productListSelector,

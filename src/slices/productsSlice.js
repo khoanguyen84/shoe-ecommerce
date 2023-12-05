@@ -11,7 +11,8 @@ const productsSlice = createSlice({
     name: 'productList',
     initialState: {
         status: 'idle',
-        products: []
+        products: [],
+        product: {}
     },
     reducers: {
         // fetchProducts: (state, action) => {
@@ -32,6 +33,13 @@ const productsSlice = createSlice({
             })
             .addCase(addNewProductThunkAction.fulfilled, (state, action) => {
                 state.products.unshift(action.payload)
+            })
+            .addCase(fetchProductByIdThunkAction.pending, (state, action) => {
+                state.status = 'loading'
+            })
+            .addCase(fetchProductByIdThunkAction.fulfilled, (state, action) => {
+                state.status = 'idle'
+                state.product = action.payload
             })
     }
 })
@@ -65,5 +73,14 @@ export const addNewProductThunkAction = createAsyncThunk('productList/addNewProd
 
     return data
 })
+
+export const fetchProductByIdThunkAction = createAsyncThunk(
+    'productList/fetchProductByIdThunkAction',
+    async (productId) => {
+        let productRes = await fetch(`https://jsonserver-vercel-api.vercel.app/products/${productId}`)
+        let product = await productRes.json()
+        return product;
+    }
+)
 
 export default productsSlice;
