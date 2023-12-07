@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { FaEdit, FaEye, FaPlus, FaStar, FaTimes, FaTrash } from "react-icons/fa";
+import { FaEdit, FaEye, FaPlus, FaStar, FaTimes, FaTrash, FaUpload } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewProductThunkAction, fetchProductThunkAction } from "../../../slices/productsSlice";
 import { loadingManageSelector, productPaginationSelector } from "../../../redux-toolkit/selectors";
 import useFetchResource from "../../../custom-hooks/useFetchResource";
 import { CATEGORY_API_URL, COLOR_API_URL, COMPANY_API_URL } from "../../../services/common";
@@ -10,7 +9,9 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { toast } from "react-toastify";
 import EditProductModel from "./EditProductModel";
-import { fetchProductPaginationThunkAction } from "../../../slices/manageProductSlice";
+import { addNewProductThunkAction, fetchProductPaginationThunkAction, removeProductByIdThunkActon } from "../../../slices/manageProductSlice";
+import Swal from 'sweetalert2';
+import axios from 'axios'
 
 const schema = yup.object({
     title: yup.string().required(),
@@ -18,7 +19,7 @@ const schema = yup.object({
     category: yup.string().required(),
     color: yup.string().required(),
     company: yup.string().required(),
-    img: yup.string().required(),
+    // img: yup.string().required(),
 })
 
 function ProductList() {
@@ -26,6 +27,11 @@ function ProductList() {
     const [page, setPage] = useState(1)
     const [pageSize, setPageSize] = useState(10)
     const [direction, setDirection] = useState('next')
+    const [field, setField] = useState('id')
+    const [order, setOrder] = useState('asc')
+    const [temporaryPhoto, setTemporaryPhoto] = useState()
+    const [selectFile, setSelectFile] = useState()
+    const [uploading, setUploading] = useState(false)
 
     const dispatch = useDispatch()
     const loading = useSelector(loadingManageSelector)
@@ -33,15 +39,17 @@ function ProductList() {
     useEffect(() => {
         dispatch(fetchProductPaginationThunkAction({
             _page: page,
-            _limit: pageSize
+            _limit: pageSize,
+            _sort: field,
+            _order: order
         }))
-    }, [dispatch, page, pageSize])
+    }, [dispatch, page, pageSize, field, order])
 
     const companyList = useFetchResource(COMPANY_API_URL)
     const categoryList = useFetchResource(CATEGORY_API_URL)
     const colorList = useFetchResource(COLOR_API_URL)
 
-    const { register, handleSubmit, reset, formState: { errors } } = useForm({
+    const { register, handleSubmit, reset, formState: { errors }, setValue } = useForm({
         resolver: yupResolver(schema)
     })
 
@@ -50,8 +58,17 @@ function ProductList() {
     const handleCloseAddProductArea = () => {
         setOpenAddProductArea(false)
         reset()
+        setSelectFile()
+        setTemporaryPhoto()
     }
     const handleAddNewProduct = (data) => {
+        if (!data?.img) {
+            Swal.fire({
+                'title': 'Alert!',
+                'text': 'You need upload a photo first!'
+            })
+            return;
+        }
         let newProduct = {
             ...data,
             prevPrice: 0,
@@ -60,6 +77,8 @@ function ProductList() {
         }
         dispatch(addNewProductThunkAction(newProduct))
         reset()
+        setSelectFile()
+        setTemporaryPhoto()
         toast.success('Product added success!')
     }
 
@@ -86,7 +105,40 @@ function ProductList() {
         setPage(1)
         setDirection('next')
     }
-    
+
+    const handleRemoveProduct = (product) => {
+        Swal.fire({
+            title: "Confirm remove product",
+            text: `Are you sure to remove product: ${product.title}?`,
+            showCancelButton: true,
+            confirmButtonColor: '#d33'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                dispatch(removeProductByIdThunkActon(product))
+                toast(`Product ${product.title} removed success!`)
+            }
+        })
+    }
+
+    const handleSelectPhoto = (e) => {
+        if (e.target.files[0]?.name) {
+            const fake_photo = URL.createObjectURL(e.target.files[0])
+            setTemporaryPhoto(fake_photo)
+            setSelectFile(e.target.files[0])
+        }
+    }
+
+    const handleUploadPhoto = async (e) => {
+        e.stopPropagation()
+        setUploading(true)
+        const formData = new FormData();
+        formData.append('file', selectFile)
+        formData.append('upload_preset', 'lhih0wco')
+        let uploadResult = await axios.post('https://api.cloudinary.com/v1_1/dikortveg/image/upload', formData)
+        setTemporaryPhoto(uploadResult?.data?.secure_url)
+        setValue('img', uploadResult?.data?.secure_url)
+        setUploading(false)
+    }
     return (
         <div className="container">
             <EditProductModel selectProduct={selectProduct} setSelectProduct={setSelectProduct} />
@@ -127,6 +179,7 @@ function ProductList() {
                                     <span className="invalid-feedback">{errors?.newPrice?.message}</span>
                                 </div>
                                 <div className="form-group mb-2">
+                                    <label className="form-label"></label>
                                     <div className="d-flex">
                                         <button type="submit" className="btn btn-success btn-sm flex-grow-1 me-2 d-flex align-items-center justify-content-center">
                                             <FaPlus className="me-2" />
@@ -145,7 +198,7 @@ function ProductList() {
                                 <div className="form-group mb-2">
                                     <label className="form-label">Category</label>
                                     <select
-                                        className={`form-control form-control-sm ${errors?.category?.message ? 'is-invalid' : ''}`}
+                                        className={`form-select form-select-sm form-control-sm ${errors?.category?.message ? 'is-invalid' : ''}`}
                                         defaultValue={''}
                                         {...register('category')}
                                     >
@@ -161,7 +214,7 @@ function ProductList() {
                                 <div className="form-group mb-2">
                                     <label className="form-label">Company</label>
                                     <select
-                                        className={`form-control form-control-sm ${errors?.company?.message ? 'is-invalid' : ''}`}
+                                        className={`form-select form-select-sm form-control-sm ${errors?.company?.message ? 'is-invalid' : ''}`}
                                         defaultValue={''}
                                         {...register('company')}
                                     >
@@ -174,12 +227,10 @@ function ProductList() {
                                     </select>
                                     <span className="invalid-feedback">{errors?.company?.message}</span>
                                 </div>
-                            </div>
-                            <div className="col-md-4">
                                 <div className="form-group mb-2">
                                     <label className="form-label">Color</label>
                                     <select
-                                        className={`form-control form-control-sm ${errors?.color?.message ? 'is-invalid' : ''}`}
+                                        className={`form-select form-select-sm form-control-sm ${errors?.color?.message ? 'is-invalid' : ''}`}
                                         defaultValue={''}
                                         {...register('color')}
                                     >
@@ -192,7 +243,41 @@ function ProductList() {
                                     </select>
                                     <span className="invalid-feedback">{errors?.color?.message}</span>
                                 </div>
-                                <div className="form-group mb-2">
+                            </div>
+                            <div className="col-md-4">
+                                <div className="border-dashed w-100 h-100" onClick={() => document.getElementById('file-photo').click()}>
+                                    {
+                                        temporaryPhoto ? (
+                                            <div role="button" className="d-flex flex-column align-items-center justify-content-center w-100 h-100 text-secondary">
+                                                <img style={{ maxWidth: '220px', maxHeight: '70%' }} src={temporaryPhoto} alt="" />
+                                                {
+                                                    uploading ? (
+                                                        <button type="button" className="btn btn-secondary btn-sm d-flex align-items-center mt-2" disabled>
+                                                            <FaUpload className="me-3" />
+                                                            Uploading...
+                                                        </button>
+                                                    ) : (
+                                                        <button type="button" className="btn btn-secondary btn-sm d-flex align-items-center mt-2"
+                                                            onClick={handleUploadPhoto}
+                                                        >
+                                                            <FaUpload className="me-3" />
+                                                            Upload
+                                                        </button>
+                                                    )
+                                                }
+                                            </div>
+                                        ) : (
+                                            <div role="button" className="d-flex flex-column align-items-center justify-content-center w-100 h-100 text-secondary">
+                                                <FaUpload size={50} className="mb-2" />
+                                                <span className="text-decoration-underline">Browse a photo</span>
+                                            </div>
+                                        )
+                                    }
+                                    <input id="file-photo" type="file" accept="image/*" className="d-none"
+                                        onChange={handleSelectPhoto}
+                                    />
+                                </div>
+                                {/* <div className="form-group mb-2">
                                     <label className="form-label">Image</label>
                                     <input
                                         type="text"
@@ -201,13 +286,36 @@ function ProductList() {
                                         {...register('img')}
                                     />
                                     <span className="invalid-feedback">{errors?.img?.message}</span>
-                                </div>
+                                </div> */}
                             </div>
                         </form>
-                    </div>
+                    </div >
                 )
             }
             <div className="row product-list">
+                <div className="col-md-12 d-flex align-items-center my-2">
+                    <div className="d-flex align-items-center">
+                        <span className="me-2">Field</span>
+                        <select className="form-select form-select-sm" defaultValue={'id'}
+                            onChange={(e) => setField(e.target.value)}
+                        >
+                            <option value={'id'}>Id</option>
+                            <option value={'title'}>Title</option>
+                            <option value={'category'}>Category</option>
+                            <option value={'color'}>Color</option>
+                            <option value={'company'}>Company</option>
+                        </select>
+                    </div>
+                    <div className="d-flex align-items-center">
+                        <span className="mx-2">Order</span>
+                        <select className="form-select form-select-sm" defaultValue={'asc'}
+                            onChange={(e) => setOrder(e.target.value)}
+                        >
+                            <option value={'asc'}>Ascendent</option>
+                            <option value={'desc'}>Descendent</option>
+                        </select>
+                    </div>
+                </div>
                 {
                     loading === 'loading' ? <p>Loading ...</p> : (
                         <table className="table table-striped product-table">
@@ -267,7 +375,7 @@ function ProductList() {
                                                     <FaEdit className="text-success me-1" role="button"
                                                         onClick={() => handleSelectProduct(product)}
                                                     />
-                                                    <FaTrash className="text-danger" />
+                                                    <FaTrash className="text-danger" role="button" onClick={() => handleRemoveProduct(product)} />
                                                 </div>
                                             </td>
                                         </tr>
@@ -299,7 +407,7 @@ function ProductList() {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

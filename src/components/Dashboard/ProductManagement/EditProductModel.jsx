@@ -98,12 +98,28 @@ function EditProductModel({ selectProduct, setSelectProduct }) {
                                                     />
                                                     <span className="invalid-feedback">{errors?.newPrice?.message}</span>
                                                 </div>
+                                                <div className="form-group mb-2">
+                                                    <label className="form-label">Color</label>
+                                                    <select
+                                                        className={`form-select form-select-sm ${errors?.color?.message ? 'is-invalid' : ''}`}
+                                                        defaultValue={''}
+                                                        {...register('color')}
+                                                    >
+                                                        <option value={''} disabled>Please select color</option>
+                                                        {
+                                                            colorList?.map((color) => (
+                                                                <option key={color.id} value={color.name}>{color.name}</option>
+                                                            ))
+                                                        }
+                                                    </select>
+                                                    <span className="invalid-feedback">{errors?.color?.message}</span>
+                                                </div>
                                             </div>
                                             <div className="col-md-4">
                                                 <div className="form-group mb-2">
                                                     <label className="form-label">Category</label>
                                                     <select
-                                                        className={`form-control form-control-sm ${errors?.category?.message ? 'is-invalid' : ''}`}
+                                                        className={`form-select form-select-sm ${errors?.category?.message ? 'is-invalid' : ''}`}
                                                         defaultValue={''}
                                                         {...register('category')}
                                                     >
@@ -119,7 +135,7 @@ function EditProductModel({ selectProduct, setSelectProduct }) {
                                                 <div className="form-group mb-2">
                                                     <label className="form-label">Company</label>
                                                     <select
-                                                        className={`form-control form-control-sm ${errors?.company?.message ? 'is-invalid' : ''}`}
+                                                        className={`form-select form-select-sm ${errors?.company?.message ? 'is-invalid' : ''}`}
                                                         defaultValue={''}
                                                         {...register('company')}
                                                     >
@@ -132,24 +148,6 @@ function EditProductModel({ selectProduct, setSelectProduct }) {
                                                     </select>
                                                     <span className="invalid-feedback">{errors?.company?.message}</span>
                                                 </div>
-                                            </div>
-                                            <div className="col-md-4">
-                                                <div className="form-group mb-2">
-                                                    <label className="form-label">Color</label>
-                                                    <select
-                                                        className={`form-control form-control-sm ${errors?.color?.message ? 'is-invalid' : ''}`}
-                                                        defaultValue={''}
-                                                        {...register('color')}
-                                                    >
-                                                        <option value={''} disabled>Please select color</option>
-                                                        {
-                                                            colorList?.map((color) => (
-                                                                <option key={color.id} value={color.name}>{color.name}</option>
-                                                            ))
-                                                        }
-                                                    </select>
-                                                    <span className="invalid-feedback">{errors?.color?.message}</span>
-                                                </div>
                                                 <div className="form-group mb-2">
                                                     <label className="form-label">Image</label>
                                                     <input
@@ -159,6 +157,11 @@ function EditProductModel({ selectProduct, setSelectProduct }) {
                                                         {...register('img')}
                                                     />
                                                     <span className="invalid-feedback">{errors?.img?.message}</span>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-4">
+                                                <div className="border-dashed d-flex align-items-center justify-content-center w-100 h-100">
+                                                    <img style={{ maxWidth: '220px', maxHeight: '70%' }} src={currenProduct?.img} alt="" />
                                                 </div>
                                             </div>
                                         </div>

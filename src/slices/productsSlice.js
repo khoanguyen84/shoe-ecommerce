@@ -28,12 +28,6 @@ const productsSlice = createSlice({
                 state.status = 'idle'
                 state.products = action.payload
             })
-            .addCase(addNewProductThunkAction.pending, (state, action) => {
-
-            })
-            .addCase(addNewProductThunkAction.fulfilled, (state, action) => {
-                state.products.unshift(action.payload)
-            })
             .addCase(fetchProductByIdThunkAction.pending, (state, action) => {
                 state.status = 'loading'
             })
@@ -59,19 +53,6 @@ export const fetchProductThunkAction = createAsyncThunk('productList/fetchProduc
         return Number(item_2.id) - Number(item_1.id)
     })
     return data;
-})
-
-export const addNewProductThunkAction = createAsyncThunk('productList/addNewProductThunkAction', async (newProduct) => {
-    let newProductRes = await fetch('https://jsonserver-vercel-api.vercel.app/products', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newProduct)
-    })
-    let data = await newProductRes.json()
-
-    return data
 })
 
 export const fetchProductByIdThunkAction = createAsyncThunk(
