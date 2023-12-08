@@ -14,10 +14,13 @@ function Product({ product }) {
     return (
         <div className="col-md-3 mb-4">
             <div className="card d-flex align-items-center pt-2">
-                <img src={img}
-                    className="card-image-top" alt=""
-                    style={{ width: "70%" }}
-                />
+                <div className="d-flex align-items-center justify-content-center" style={{width: '100%', minHeight: '210px'}}>
+                    <img src={img}
+                        className="card-image-top" alt=""
+                        style={{ width: "70%" }}
+                    />
+                </div>
+
                 <div className="card-body">
                     <p className="fw-bolder">{title}</p>
                     <div className="d-flex align-items-center mb-2">
