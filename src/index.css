@@ -146,5 +146,5 @@ input[type='search']::placeholder {
 .border-dashed{
   border: 1px dashed gray;
   border-radius: 5px;
-  padding: 1px
+  padding: 2px 1px;
 }

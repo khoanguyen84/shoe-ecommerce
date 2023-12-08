@@ -137,6 +137,7 @@ function ProductList() {
         let uploadResult = await axios.post('https://api.cloudinary.com/v1_1/dikortveg/image/upload', formData)
         setTemporaryPhoto(uploadResult?.data?.secure_url)
         setValue('img', uploadResult?.data?.secure_url)
+        toast.info('Photo uploaded success!')
         setUploading(false)
     }
     return (
@@ -248,8 +249,8 @@ function ProductList() {
                                 <div className="border-dashed w-100 h-100" onClick={() => document.getElementById('file-photo').click()}>
                                     {
                                         temporaryPhoto ? (
-                                            <div role="button" className="d-flex flex-column align-items-center justify-content-center w-100 h-100 text-secondary">
-                                                <img style={{ maxWidth: '220px', maxHeight: '70%' }} src={temporaryPhoto} alt="" />
+                                            <div role="button" className="d-flex flex-column align-items-center justify-content-between w-100 h-100 text-secondary">
+                                                <img style={{ maxWidth: '90%', maxHeight: '70%' }} src={temporaryPhoto} alt="" />
                                                 {
                                                     uploading ? (
                                                         <button type="button" className="btn btn-secondary btn-sm d-flex align-items-center mt-2" disabled>

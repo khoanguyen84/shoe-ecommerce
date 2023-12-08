@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaSave, FaUndo } from "react-icons/fa";
+import { FaExchangeAlt, FaSave, FaUndo, FaUpload } from "react-icons/fa";
 import { set, useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
@@ -8,6 +8,8 @@ import { CATEGORY_API_URL, COLOR_API_URL, COMPANY_API_URL } from "../../../servi
 import { useDispatch } from "react-redux";
 import { editProductThunkAction } from "../../../slices/manageProductSlice";
 import { toast } from "react-toastify";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const schema = yup.object({
     title: yup.string().required(),
@@ -24,6 +26,9 @@ function EditProductModel({ selectProduct, setSelectProduct }) {
     const colorList = useFetchResource(COLOR_API_URL)
     const [currenProduct, setCurrentProduct] = useState({})
     const [loading, setLoading] = useState(false)
+    const [temporayChangePhoto, setTemporaryChangePhoto] = useState()
+    const [selectedNewPhoto, setSelectedNewPhoto] = useState()
+    const [reUploading, setReUploading] = useState(false)
 
     const dispatch = useDispatch()
     useEffect(() => {
@@ -50,9 +55,18 @@ function EditProductModel({ selectProduct, setSelectProduct }) {
     const handleCloseEditModel = () => {
         setSelectProduct({})
         reset()
+        setSelectedNewPhoto()
+        setTemporaryChangePhoto()
     }
 
     const handleSaveProduct = (data) => {
+        if (selectedNewPhoto?.name) {
+            Swal.fire({
+                title: 'Alert',
+                text: 'You need upload new photo first!'
+            })
+            return;
+        }
         let editProduct = {
             ...currenProduct,
             ...data,
@@ -61,6 +75,35 @@ function EditProductModel({ selectProduct, setSelectProduct }) {
         dispatch(editProductThunkAction(editProduct))
         toast.success('Product updated success')
         setSelectProduct({})
+    }
+
+    const handleChangePhoto = (e) => {
+        if (e.target.files[0]?.name) {
+            const fake_photo_url = URL.createObjectURL(e.target.files[0])
+            setTemporaryChangePhoto(fake_photo_url)
+            setSelectedNewPhoto(e.target.files[0])
+        }
+    }
+
+    const handleReUploadPhoto = async (e) => {
+        e.stopPropagation()
+        if (selectedNewPhoto?.name) {
+            setReUploading(true)
+            const formData = new FormData();
+            formData.append('file', selectedNewPhoto)
+            formData.append('upload_preset', 'lhih0wco')
+            let uploadResult = await axios.post('https://api.cloudinary.com/v1_1/dikortveg/image/upload', formData)
+            setTemporaryChangePhoto(uploadResult?.data?.secure_url)
+            setValue('img', uploadResult?.data?.secure_url)
+            toast.info('Photo changed success!')
+            setSelectedNewPhoto()
+            setReUploading(false)
+            return
+        }
+        Swal.fire({
+            title: 'Alert',
+            text: 'You actually upload, please select another photo!'
+        })
     }
 
     return (
@@ -148,20 +191,27 @@ function EditProductModel({ selectProduct, setSelectProduct }) {
                                                     </select>
                                                     <span className="invalid-feedback">{errors?.company?.message}</span>
                                                 </div>
-                                                <div className="form-group mb-2">
-                                                    <label className="form-label">Image</label>
-                                                    <input
-                                                        type="text"
-                                                        className={`form-control form-control-sm ${errors?.img?.message ? 'is-invalid' : ''}`}
-                                                        placeholder="Image"
-                                                        {...register('img')}
-                                                    />
-                                                    <span className="invalid-feedback">{errors?.img?.message}</span>
-                                                </div>
                                             </div>
                                             <div className="col-md-4">
-                                                <div className="border-dashed d-flex align-items-center justify-content-center w-100 h-100">
-                                                    <img style={{ maxWidth: '220px', maxHeight: '70%' }} src={currenProduct?.img} alt="" />
+                                                <div className="border-dashed d-flex flex-column align-items-center justify-content-between w-100 h-100">
+                                                    <img style={{ maxWidth: '90%', maxHeight: '70%' }} src={temporayChangePhoto || currenProduct?.img} alt="" />
+                                                    <div className="d-flex align-items-center justify-content-between">
+                                                        {
+                                                            temporayChangePhoto && (<button type="button" className="btn btn-sm btn-primary me-3"
+                                                                onClick={handleReUploadPhoto} {...`${reUploading ? 'disabled' : ''}`}
+                                                            >
+                                                                <FaUpload className="me-2" />
+                                                                {`${reUploading ? 'Uploading...' : 'Upload'}`}
+                                                            </button>)
+                                                        }
+                                                        <button type="button" className="btn btn-sm btn-secondary" onClick={() => document.getElementById('file-change-photo').click()}>
+                                                            <FaExchangeAlt className="me-2" />
+                                                            Change
+                                                        </button>
+                                                    </div>
+                                                    <input id="file-change-photo" type="file" accept="image/*" className="d-none"
+                                                        onChange={handleChangePhoto}
+                                                    />
                                                 </div>
                                             </div>
                                         </div>
@@ -182,8 +232,8 @@ function EditProductModel({ selectProduct, setSelectProduct }) {
                             </div>
                         </form>
                     </div>
-                </div>
-            </div>
+                </div >
+            </div >
         </>
     )
 }
